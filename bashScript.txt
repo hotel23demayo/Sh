@@ -1,0 +1,192 @@
+#!/bin/bash
+#buscar reservas que no sean con el estado "O"
+echo "Buscando Reservas con diferentes estados ..."
+sleep 2
+
+cd $HOME/Descargas/
+
+if [ -e consultaRegimenReport.csv ]; then
+    awk -F "," '{
+        if ($24 != "O") {
+            print $3 ",", $9 ",", $10 ",", $6 ",", $12 ",", $13 ",", $14 ",", $15 ",", $7 ",", $17 ",", $24 ",", $18 ",", $8 ",", $5
+        }
+    }' consultaRegimenReport.csv > reserva_hoy.csv
+    
+    echo "Archivo \"reserva_estado.csv\" descargado. Encontralo en la carpeta => "
+    echo "/Descargas/reserva_estado.csv "
+else
+    echo "No existe el archivo a Consultar, procure bajarlo nuevamente" 2>/dev/null
+fi
+
+cd $HOME
+
+#con funciones y fecha a buscar
+
+#!/bin/bash
+
+buscar_reservas() {
+    fecha=$(date -d "$1" +%Y-%m-%d)  # Convierte la fecha al formato necesario (año-mes-día)
+
+    awk -F "," -v fecha="$fecha" '{
+        if ($24 != "O" && $9 == fecha)  {
+            print $3 ",", $9 ",", $10 ",", $6 ",", $12 ",", $13 ",", $14 ",", $15 ",", $7 ",", $17 ",", $24 ",", $18 ",", $8 ",", $5
+        }
+    }' consultaRegimenReport.csv > reserva_hoy.csv
+}
+
+verificar_archivo() {
+    if [ -e consultaRegimenReport.csv ]; then
+        buscar_reservas "$1"
+        
+        echo "Archivo \"reserva_estado.csv\" descargado. Encontralo en la carpeta => "
+        echo "/Descargas/reserva_estado.csv "
+    else
+        echo "No existe el archivo a Consultar, procure bajarlo nuevamente" 2>/dev/null
+    fi
+}
+
+echo "Buscando Reservas con diferentes estados ..."
+sleep 2
+
+cd $HOME/Descargas/
+
+verificar_archivo "05/07/2023"
+
+cd $HOME
+--.--
+
+#Apartado caja diaria
+
+  cd $HOME/Descargas/
+
+		 if [ -e Reporte_Recibos.csv ]
+		 then
+		 touch raw.csv efvo.csv && cut -d"," -f1,2,4,6 Reporte_Recibos.csv | cat > raw.csv | sed -i 's/0044-RB-000/0/' raw.csv  && cat raw.csv | grep -i "caja seccional" raw.csv |cat > efvo.csv | awk -F ',' '{sum+=$4;} END {print sum;}' efvo.csv | cat > efvo.csv && cat efvo.csv
+                 #touch raw.csv tarj.csv && cut -d"," -f1,2,4,6 Reporte_Recibos.csv | cat > raw.csv | sed -i 's/0044-RB-000/0/' raw.csv  >
+		 	echo "Rendicion del Dia"
+		 else
+			echo "No existe el archivo a Consultar, procure bajarlo nuevamente" 2>/dev/null
+		 fi
+                 sleep 5
+                 echo "Rendicion Finalizada"
+
+#version Mejorada en chat gpt 
+#!/bin/bash
+
+cd $HOME/Descargas/
+
+if [ -e Reporte_Recibos.csv ]; then
+    touch raw.csv efvo.csv
+    cut -d"," -f1,2,4,6 Reporte_Recibos.csv > raw.csv
+    sed -i 's/0044-RB-000/0/' raw.csv
+    grep -i "caja seccional" raw.csv > efvo.csv
+    awk -F ',' '{sum+=$4;} END {print sum;}' efvo.csv > efvo_temp.csv
+    cat efvo_temp.csv > efvo.csv
+    cat efvo.csv
+    echo "Rendicion del Dia"
+else
+    echo "No existe el archivo a Consultar, procure bajarlo nuevamente" 2>/dev/null
+fi
+
+sleep 5
+echo "Rendicion Finalizada"
+
+##version Mejorada bing 
+#!/bin/bash
+
+cd $HOME/Descargas/
+
+if [ -e Reporte_Recibos.csv ]; then
+    awk -F ',' '{gsub(/0044-RB-000/, "0", $4); print $1","$2","$4","$6}' Reporte_Recibos.csv | awk -F ',' '/caja seccional/ {sum+=$3;} END {print sum;}' > efvo.csv
+    echo "Rendicion del Dia"
+else
+    echo "No existe el archivo a Consultar, procure bajarlo nuevamente" 2>/dev/null
+fi
+
+sleep 5
+echo "Rendicion Finalizada"
+
+--actualizacion a Js
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rendición del Día en Efectivo</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 400px;
+      height: 200px;
+      margin: 50px auto;
+      padding: 20px;
+      font-size: 130%;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .file-selector {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background-color: #007bff;
+      color: #ffffff;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+    }
+
+    .file-selector:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="file-selector" onclick="handleFileSelect()">
+      <i class="material-icons-outlined">$</i>
+    </span>
+    <h1>Rendición del Día en Efectivo</h1>
+    <p id="rendicion"></p>
+  </div>
+
+  <script>
+    function handleFileSelect() {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = '.csv';
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const lines = reader.result.split('\n');
+          let sum = 0;
+
+          for (let i = 1; i < lines.length; i++) {
+            const columns = lines[i].split(',');
+            if (columns[3] && columns[3].trim() === 'Caja Seccional') { // Ajusta el índice para la columna "Medio de cobranza"
+              const importe = parseFloat(columns[5].replace(',', '.')); // Ajusta el índice para la columna "Importe"
+              if (!isNaN(importe)) {
+                sum += importe;
+              }
+            }
+          }
+
+          const rendicionElement = document.getElementById('rendicion');
+          rendicionElement.textContent = `Rendición del Día en efectivo: $${sum.toFixed(2)}`;
+        };
+
+        reader.readAsText(file);
+      });
+
+      fileInput.click();
+    }
+  </script>
+</body>
+</html>
+
+
